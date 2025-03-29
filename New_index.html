@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        input, select, button { width: 100%; margin: 5px 0; padding: 10px; }
+        .item-list { margin-top: 20px; }
+        .item { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; }
+        img { max-width: 100px; display: block; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Lost & Found Item Tracker</h2>
+        
+        <form id="reportForm">
+            <label>Item Type:</label>
+            <select id="itemType">
+                <option value="lost">Lost</option>
+                <option value="found">Found</option>
+            </select>
+
+            <label>Item Name:</label>
+            <input type="text" id="itemName" required>
+
+            <label>Upload Image:</label>
+            <input type="file" id="itemImage" accept="image/*">
+
+            <button type="button" onclick="submitItem()">Submit</button>
+        </form>
+
+        <div class="item-list" id="itemsList">
+            <h3>Reported Items</h3>
+        </div>
+    </div>
+
+    <script>
+        function submitItem() {
+            const itemType = document.getElementById('itemType').value;
+            const itemName = document.getElementById('itemName').value;
+            const itemImage = document.getElementById('itemImage').files[0];
+
+            if (!itemName) {
+                alert("Please enter an item name.");
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                let itemHTML = `
+                    <div class="item">
+                        <strong>${itemType.toUpperCase()}:</strong> ${itemName} <br>
+                        <img src="${event.target.result}" alt="${itemName}">
+                    </div>
+                `;
+                document.getElementById('itemsList').innerHTML += itemHTML;
+            };
+
+            if (itemImage) {
+                reader.readAsDataURL(itemImage);
+            } else {
+                let itemHTML = `<div class="item"><strong>${itemType.toUpperCase()}:</strong> ${itemName}</div>`;
+                document.getElementById('itemsList').innerHTML += itemHTML;
+            }
+        }
+    </script>
+
+</body>
+</html>
